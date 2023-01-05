@@ -121,7 +121,6 @@ the networking portion of the project.
 The gameover state is defined by if the Hangman health reaches 0, or the word has been
 guessed. The server will then dq all the clients and then create a new lobby and wait
 for connections
-
 ```
 
 
