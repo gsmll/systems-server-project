@@ -2,7 +2,9 @@
 
 # Gabriel Small, Jawad (Jamie) Sifat
         
-# A statement of the problem you are solving and/or a high level description of the project.
+# A multiplayer, network-based hangman, consisting of a server host and x amount of users playing in realtime.
+
+A statement of the problem you are solving and/or a high level description of the project.
     
 # A description as to how the project will be used (describe the user interface).
   
