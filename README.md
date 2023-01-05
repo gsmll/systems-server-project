@@ -42,15 +42,15 @@ _________________________________________________________
 _________________________________________________________
 ```
 ## A description of your technical design. This should include:
+   
+   
+## How you will be using the topics covered in class in the project.
    We will be using forking for the host and client relations.
    We will be using sockets for tcp connections to send hangman answers and results.
    We will allocate memory for almost all of the information, such as guesses, players, and words. 
    We will use signals to handle closed clients and leaving players.
    We will use file for list of words such that the server can choose word to guess.
    
-   
-   
-## How you will be using the topics covered in class in the project.
      
 ## How you are breaking down the project and who is responsible for which parts.
   Jamie is responsible for visuals and game mechanics -- CLIENTS
