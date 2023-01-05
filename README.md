@@ -24,19 +24,19 @@ player guess (reveal letters, end the game, etc)
 - Once the game is finished (via gameover or the word was guessed), the server will
 disconnect all clients and start up a new hangman lobby, in which all the clients
 will have to reconnect. 
-_________________________________________________________
-|       HANGMAN-ART         _ _ _ _ _ _ _               | 
-|							| 
-|       LETTERS GUESSED: ' ' ' '                        | 
-|	WORDS GUESSED:                                  | 
-|       						|
+_________________________________________________________  
+|       HANGMAN-ART         _ _ _ _ _ _ _               |  
+|							|  
+|       LETTERS GUESSED: ' ' ' '                        |  
+|	WORDS GUESSED:                                  |   
+|       						|  
 |    Players: Geek-Smasher, A-Real-Life-GNU, HOpleSS    |              
-|							| 
-|    INPUT: |CHARACTER| |WORD|                          |
-|    -----------------------------                      |
-|	[INPUT FIELD]					|
-|     ----------------------------                      |
-_________________________________________________________
+|							|  
+|    INPUT: |CHARACTER| |WORD|                          |  
+|    -----------------------------                      |  
+|	[INPUT FIELD]					|  
+|     ----------------------------                      |  
+_________________________________________________________  
 
 ## A description of your technical design. This should include:
    
