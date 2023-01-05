@@ -56,13 +56,36 @@ _________________________________________________________
   Jamie is responsible for visuals and game mechanics -- CLIENTS
   
   Gabriel is responsible for networking and file management -- HOST
-## What data structures you will be using and how.
-     
-  
-## What algorithms and /or data structures you will be using, and how.
-    
+
+## What implementations/data structures will be using. 
+
+`utiltype.h`: A header file that defines these types and MACROS
+```C
+/* From <stdint.h> / <utiltype.h> */
+u8  - unsigned  8  bit decimal
+u16 - unsigned 16  bit decimal
+u32 - unsigned 32  bit decimal
+u64 - unsigned 64  bit decimal
+
+i8  - signed  8  bit integer
+i16 - signed 16  bit integer
+i32 - signed 32  bit integer
+i64 - signed 64  bit integer
+
+str - A pointer to a buffer of unsigned 8 bit decimals (unsigned char).
+
+/* From <stdbool.h> */
+bool - A truth value
+
+#include <termbox.h>
+- A library for writing text-based interfaces based on a simple abstraction
+
+``` 
+At most I believe we'll just understand if a character is in a string as the 
+most algorthimically intensive task.
+
 # A timeline with expected completion dates of parts of the project.
-1-9 network and host basic functionality
-1-11 base game functionality
-1-15 graphic part of game
-1-17 extra stuff
+- 1-9 network and host basic functionality
+- 1-11 base game functionality
+- 1-15 graphic part of game
+- 1-17 extra stuff
