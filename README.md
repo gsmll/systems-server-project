@@ -1,6 +1,6 @@
 # LezHangum!
 
-# Members
+# Gabriel Small, Jawad (Jamie) Sifat
         
 # A statement of the problem you are solving and/or a high level description of the project.
     
