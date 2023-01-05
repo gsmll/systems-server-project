@@ -2,7 +2,7 @@
 
 # Gabriel Small, Jawad (Jamie) Sifat
         
-# A multiplayer, network-based hangman, consisting of a server host and x amount of users playing in realtime.
+# A multiplayer, network-based hangman, with various players in realtime.
 
 A statement of the problem you are solving and/or a high level description of the project.
     
