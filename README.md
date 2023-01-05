@@ -2,7 +2,7 @@
 
 # Gabriel Small, Jawad (Jamie) Sifat
         
-# Project info
+# A statement of the problem you are solving and/or a high level description of the project.
 
 A multiplayer, network-based hangman, with various players in realtime. This will consist of a server host and clients for each player (dynamic).
     
