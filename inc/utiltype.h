@@ -20,6 +20,8 @@ typedef uint64_t u64;
 typedef intptr_t isize; 
 typedef uintptr_t usize;
 
+typedef u8* str;
+
 #define ASSERT(condition) condition ? true : false 
 #define ASSERT_EQ(x, y) x == y ? true : false
 
