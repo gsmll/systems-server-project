@@ -24,5 +24,9 @@ typedef u8* str;
 
 #define ASSERT(condition) condition ? true : false 
 #define ASSERT_EQ(x, y) x == y ? true : false
-
+#define UNWRAP(x, y)                                                           \
+  if (x < 0) {                                                                 \
+    perror(y);                                                                 \
+    exit(EXIT_FAILURE);                                                        \
+  } else {}
 #endif
