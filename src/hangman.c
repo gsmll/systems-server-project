@@ -1,34 +1,85 @@
-#include "../inc/termbox.h"
-#include "../inc/utiltype.h"
-#include "hangman.h"
+#include <stdio.h> 
+#include <stdint.h> 
+#include <stdlib.h> 
+#include <getopt.h> 
+#include <string.h> 
+#include <unistd.h> 
+#include <fcntl.h> 
 
-void localgame()
+#define THROW_ERR(x) { perror(x); exit(EXIT_FAILURE); } 
+
+
+static char guess_character_buffer[16];
+static char guess_type_buffer[16];
+static char *guess_word_buffer;
+static uintptr_t word_guesses = 0; 
+static uintptr_t character_guesses = 0; 
+
+
+
+int
+main(int argc, char **argv) 
 {
-	const int word_fd = open_with_unwrap(WORDS, O_RDONLY);
-	usize size_of_word_fd = get_size_in_bytes(WORDS);
-	u8* _word_buffer = malloc(size_of_word_fd);
-	UNWRAP(read(word_fd, _word_buffer, size_of_word_fd), "Error: Unable to read file");
-	fprintf(stdout, "%s", _word_buffer);
-}
+	const char *src_word = "Hello"; 
+	int src_word_len = strlen("Hello");
 
+	char *answer = malloc(sizeof(char) * strlen("Hello") + 1);
+	guess_word_buffer = calloc(src_word_len + 1, sizeof(char));
 
-int main(int argc, char **argv) 
-{ 
-	if (argc < 2) { print_help(); } 
-
-	Conf config = 
+	strncpy(answer, src_word, src_word_len + 1);
+	for (uintptr_t i = 0; i < src_word_len; i++)
 	{
-		.gametype = LOCAL, 
-		.username = "Stack_Smasher",
-		.word_file_path = WORDS
-	};
-
-
-	debug_print_config(&config);
-	if (config.gametype == LOCAL) 
-	{
-		localgame();
+		answer[i] = '.';
 	}
 
+	while (strchr(answer, '.') != NULL) 
+	{
+		printf("Gameinfo\n\tchar_guesses: %zu\n\tword_guesses: %zu\n\tAnswer: %s\n", 
+				character_guesses,
+				word_guesses, 
+				answer);
+		printf("Character guess or word guess [c/w]: ");
+		fgets(guess_type_buffer, 8, stdin);
+		switch (guess_type_buffer[0]) 
+		{
+			case 'c':
+				printf("Enter a character guess: ");
+				fgets(guess_character_buffer, 8, stdin);
+				fprintf(stderr, "[:: %c]", guess_type_buffer[0]);
+				character_guesses++;	
+				for (uintptr_t i = 0; i < src_word_len; i++) 
+				{
+					if (guess_character_buffer[0] == src_word[i]) 
+					{
+						answer[i] = guess_character_buffer[0]; 
+					}
+					continue;
+				}
+				break;
+			case 'w':
+				printf("Enter a word guess: "); 
+				fgets(guess_word_buffer, src_word_len + 1, stdin);
+				fprintf(stderr, "you guessed: %s\n", guess_word_buffer);
+				for (uintptr_t i = 0; i < src_word_len; i++)
+				{
+					if (guess_word_buffer[i] != src_word[i])
+					{
+						printf("You guess incorrectly!"); 
+						word_guesses++;
+						continue; 
+					}
+					word_guesses++;
+					printf("YOU WIN!\n");
+					return 0;
+				}
+			default: 
+				continue;
+		}
+	}
 	return 0;
 }
+
+
+
+
+
