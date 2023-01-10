@@ -1,7 +1,15 @@
 #include "../inc/includes.h"
-
+static struct addrinfo * hints, * results;
+static int client_socket = 0;
+static void sighandler( int signo ) {
+  if(client_socket != 0)
+    close(client_socket);
+  free(hints);
+  freeaddrinfo(results);
+  exit(0);
+}
   int main(){
-      struct addrinfo * hints, * results;
+      signal(SIGINT, sighandler);
       hints = calloc(1,sizeof(struct addrinfo));
 
       hints->ai_family = AF_INET;
@@ -17,21 +25,23 @@
       socklen_t sock_size;
       struct sockaddr_storage client_address;
       sock_size = sizeof(client_address);
-
+      int playercount = 0;
       while(1){
+
           //wait for next client
-          printf("Waiting for connection\n");
-          int client_socket = accept(listen_socket,(struct sockaddr *)&client_address, &sock_size);
+          printf("Current Players: %d\r",playercount);
+          client_socket = accept(listen_socket,(struct sockaddr *)&client_address, &sock_size);
+          playercount++;
           int client = fork();
           if(client == 0 ){
-            char buff[1025]="";
-          //send the time formatted as a string
-          time_t ticks = time(NULL);
-  	      snprintf(buff, sizeof(buff), "%.24s\r\n", ctime(&ticks));
-          //send the string
-          write(client_socket, buff, sizeof(buff));
+            char buff[BUFSIZE];
+
           while(1){
-          int len =read(client_socket,buff,sizeof(buff));
+
+          int len;
+          if((len =read(client_socket,buff,sizeof(buff))) <= 0){
+            break;
+          }
           buff[len] =0;
           printf("%s\n",buff);
         }

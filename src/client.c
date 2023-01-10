@@ -1,14 +1,25 @@
 #include "../inc/includes.h"
+static struct addrinfo *results;
+static void sighandler( int signo ) {
+  freeaddrinfo(results);
+  exit(0);
+}
 
-int main(int argc, char *argv[]){
-    if(argc < 3) {
-       printf("Provide server address and port as a parameters\n");
-       exit(1);
-   }
-   printf("connecting to %s:%s\n",argv[1],argv[2]);
+int main(){
+   signal(SIGINT, sighandler);
+  char ipv4[20];
+  char port[6];
+
+  printf("Please enter server ipv4 address: \n");
+  fgets(ipv4, 20, stdin);
+  ipv4[strcspn(ipv4, "\n")] = 0;
+  printf("Please enter server port: \n");
+  fgets(port, 6, stdin);
+   printf("connecting to %s:%s\n",ipv4,port);
 
 
-   struct addrinfo hints, *results;
+   struct addrinfo hints;
+
    memset(&hints, 0, sizeof(hints));
 
    hints.ai_family = AF_INET;
@@ -16,7 +27,7 @@ int main(int argc, char *argv[]){
 
    int err;
    //         getaddrinfo(address,port,...)
-   if ((err = getaddrinfo(argv[1], argv[2], &hints, &results)) != 0) {
+   if ((err = getaddrinfo(ipv4, port, &hints, &results)) != 0) {
        printf("error %d : %s\n", err, strerror(err));
        return 1;
    }
@@ -35,14 +46,14 @@ int main(int argc, char *argv[]){
    //DO STUFF
    int n;
    char buff[1025];
-
-   if(n = read(sd, buff, sizeof(buff)) <= 0){
-     printf("\n Read error \n");
+   while(1){
+   if((n = read(sd, buff, sizeof(buff))) <= 0){
+     printf("\n Connection Closed \n");
      exit(1);
    }
    printf("%s",buff);
    snprintf(buff, sizeof(buff), "hi\n");
-   while(1){
+
      write(sd, buff, sizeof(buff));
      sleep(1);
 }
