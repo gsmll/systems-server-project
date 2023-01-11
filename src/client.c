@@ -1,4 +1,5 @@
 #include "../inc/includes.h"
+#include "../inc/termbox.h"
 static struct addrinfo *results;
 static void sighandler( int signo ) {
   freeaddrinfo(results);
