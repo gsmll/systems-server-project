@@ -1,10 +1,10 @@
 CC=cc
 CFLAGS= -Wall -Wextra -Werror -Wpedantic -Wno-unused-variable -Wno-unused-parameter -std=c2x -Wno-implicit-function-declaration
 HEADERS=inc/termbox.h inc/utiltype.h inc/includes.h
-OBJ=hangman.o hangman-conf.o hangman-fileio.o hangman-flag.o
+OBJ=hangman.o 
 
 hangman.o: $(HEADERS) src/hangman.c
-	$(CC) $(CFLAGS) -ltermbox -c src/hangman.c -o hangman.o
+	$(CC) $(CFLAGS) -c src/hangman.c -o hangman.o
 
 hangman-conf.o: $(HEADERS) src/hangman-conf.c
 	$(CC) $(CFLAGS) -c src/hangman-fileio.c -o hangman-conf.o

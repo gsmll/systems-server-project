@@ -15,13 +15,11 @@ static char *guess_word_buffer;
 static uintptr_t word_guesses = 0; 
 static uintptr_t character_guesses = 0; 
 
-
-
 int
 main(int argc, char **argv) 
 {
 	const char *src_word = "Hello"; 
-	int src_word_len = strlen("Hello");
+	uintptr_t src_word_len = strlen("Hello");
 
 	char *answer = malloc(sizeof(char) * strlen("Hello") + 1);
 	guess_word_buffer = calloc(src_word_len + 1, sizeof(char));
