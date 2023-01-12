@@ -47,9 +47,9 @@ main(int argc, char **argv)
 				character_guesses++;	
 				for (uintptr_t i = 0; i < src_word_len; i++) 
 				{
-					if (guess_character_buffer[0] == src_word[i]) 
+					if (tolower(guess_character_buffer[0]) == tolower(src_word[i])) 
 					{
-						answer[i] = guess_character_buffer[0]; 
+						answer[i] = tolower(guess_character_buffer[0]); 
 					}
 					continue;
 				}
