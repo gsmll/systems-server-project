@@ -1,6 +1,7 @@
 #define TB_IMPL
 #include "../inc/includes.h"
-#include "../inc/termbox.h"
+//#include "../inc/termbox.h"
+#include <pthread.h>
 static struct addrinfo * hints, * results;
 static int client_socket = 0;
 
@@ -9,14 +10,11 @@ static void sighandler( int signo ) {
     close(client_socket);
   free(hints);
   freeaddrinfo(results);
-  tb_shutdown();
   exit(0);
 }
+
   int main(){
-      tb_init();
-      tb_set_input_mode(0);
-      struct tb_event ev;
-      tb_clear();
+
       int y = 0;
       signal(SIGINT, sighandler);
       hints = calloc(1,sizeof(struct addrinfo));
@@ -36,46 +34,40 @@ static void sighandler( int signo ) {
       sock_size = sizeof(client_address);
       int playercount = 0;
       while( 1){
-
           //wait for next client
-          tb_printf(0, y, TB_GREEN, 0, "Current Players: %d",playercount);
+          
+            printf("Total Players: %d\n",playercount++);
 
-
-          tb_present();
-          tb_poll_event(&ev);
+  
+          
 
           client_socket = accept(listen_socket,(struct sockaddr *)&client_address, &sock_size);
-          playercount++;
+
           int client = fork();
           if(client == 0 ){
+
+            
             char buff[BUFSIZE];
 
           while(1){
 
           int len;
           if((len =read(client_socket,buff,sizeof(buff))) <= 0){
-            playercount--;
+            printf("Player Left\n");
             break;
           }
           buff[len] =0;
           printf("%s\n",buff);
         }
-      }
+        }
+         
 
 
 
           //close that client
           close(client_socket);
-          tb_poll_event( &ev);
-            if(ev.type == TB_EVENT_KEY){
-              if(ev.key == TB_KEY_CTRL_C){
-                tb_shutdown();
-                   exit(0);
-              }
-            }
       }
 
-      tb_shutdown();
       free(hints);
       freeaddrinfo(results);
       return 0;
