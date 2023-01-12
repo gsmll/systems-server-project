@@ -184,3 +184,11 @@ I will implement these reforms tmrw.
 
 
 ### Gabe
+
+My edits weren't quite as grand as Jae's today, as I'm setting up the ui for the server.
+My main goal was to learn to use the termbox 2 library, and to make the server keep track of current connected clients. 
+
+Termbox2 intercepted intercept though, and I dont think it's possible without multithreading to handle keys without interrupting server processess so I made little progress today.
+Tommorow I will just implement termbox for client and start doing hangman cross server.
+
+
