@@ -2,7 +2,7 @@
 #include "../inc/includes.h"
 //#include "../inc/termbox.h"
 #include <pthread.h>
-#include "../inc/hangman.h"
+//#include "../inc/hangman.h"
 static struct addrinfo * hints, * results;
 static int client_socket = 0;
 
@@ -37,7 +37,7 @@ static void sighandler( int signo ) {
       while( 1){
           //wait for next client
           
-            printf("Start\n");
+            printf("\n");
 
   
           
@@ -52,6 +52,7 @@ static void sighandler( int signo ) {
             char buff[BUFSIZE] ;
             snprintf(buff, 6, "hello");
             write(client_socket, buff, sizeof(buff));
+
 
           while(1){
 

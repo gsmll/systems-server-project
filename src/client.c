@@ -7,17 +7,16 @@ static void sighandler( int signo ) {
   exit(0);
 }
 static char guess_character_buffer[16];
-static char guess_type_buffer[16];
 static char *guess_word_buffer;
 static uintptr_t word_guesses = 0; 
 static uintptr_t character_guesses = 0; 
 static uintptr_t wrong_character_guesses = 0; 
 static uintptr_t wrong_word_guesses = 0; 
 
-int hangman(const char* srcw) 
+int hangman(const char* srcw,int sd) 
 {
 	
-  
+  char guess_type_buffer[16];
 	uintptr_t src_word_len = strlen(srcw);
 
 	char *answer = malloc(sizeof(char) * strlen("Hello") + 1);
@@ -43,12 +42,12 @@ int hangman(const char* srcw)
 			printf("YOU LOSE \n");
 			return 0;
 		}
-		for(uintptr_t i =0; i <= wrong_character_guesses;i++)
+		for(uintptr_t i =0; i <wrong_character_guesses;i++)
 		{
 			printf(" %c",wrong_char_guesses[i]);
 		}
 		printf("\t");
-		for(uintptr_t i =0; i <= wrong_word_guesses;i++)
+		for(uintptr_t i =0; i < wrong_word_guesses;i++)
 		{			
 			wrong_str_guesses[i][strcspn(wrong_str_guesses[i], "\n")] = 0;
 			printf(" %s",wrong_str_guesses[i]);
@@ -56,6 +55,7 @@ int hangman(const char* srcw)
 		printf("\t\nAnswer: %s\n", answer);
 		printf("Character guess or word guess [c/w]: ");
 		fgets(guess_type_buffer, 8, stdin);
+
 		switch (guess_type_buffer[0]) 
 		{
 			case 'c':
@@ -63,6 +63,7 @@ int hangman(const char* srcw)
 				fgets(guess_character_buffer, 8, stdin);
 				fprintf(stderr, "[:: %c]", guess_type_buffer[0]);
 				character_guesses++;	
+        write(sd,guess_character_buffer,sizeof(guess_character_buffer));
 				char exist = 0;
 				for (uintptr_t i = 0; i < src_word_len; i++) 
 				{
@@ -85,6 +86,8 @@ int hangman(const char* srcw)
 			case 'w':
 				printf("Enter a word guess: "); 
 				fgets(guess_word_buffer, src_word_len + 1, stdin);
+          write(sd,guess_word_buffer,src_word_len+1);
+
 				fprintf(stderr, "you guessed: %s\n", guess_word_buffer);
 				
 					word_guesses++;
@@ -105,15 +108,16 @@ int hangman(const char* srcw)
 }
 int main(){
    signal(SIGINT, sighandler);
-  char ipv4[20];
+  char ipv4[12];
   char port[6];
 
   printf("Please enter server ipv4 address: \n");
-  fgets(ipv4, 20, stdin);
+  fgets(ipv4, 13, stdin);
   ipv4[strcspn(ipv4, "\n")] = 0;
   printf("Please enter server port: \n");
   fgets(port, 6, stdin);
-   printf("connecting to %s:%s\n",ipv4,port);
+  getchar();
+  printf("connecting to %s:%s\n",ipv4,port);
 
 
    struct addrinfo hints;
@@ -150,7 +154,8 @@ int main(){
      exit(1);
    }
    buff[n]=0;
-   hangman(buff);
+   
+   hangman(buff,sd);
 
    printf("\n%d bytes read\n",n);
 
