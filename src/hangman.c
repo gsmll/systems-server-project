@@ -49,9 +49,10 @@ int main(int argc, char **argv)
 		{
 			printf(" %c",wrong_char_guesses[i]);
 		}
-		printf("\n\t");
+		printf("\t");
 		for(uintptr_t i =0; i <= wrong_word_guesses;i++)
-		{
+		{			
+			wrong_str_guesses[i][strcspn(wrong_str_guesses[i], "\n")] = 0;
 			printf(" %s",wrong_str_guesses[i]);
 		}
 		printf("\t\nAnswer: %s\n", answer);
@@ -92,7 +93,7 @@ int main(int argc, char **argv)
 					if (strcasecmp(guess_word_buffer,src_word))
 					{
 						printf("You guess incorrectly!"); 
-						wrong_str_guesses[wrong_word_guesses++] = guess_word_buffer;
+						strcpy(wrong_str_guesses[wrong_word_guesses++],guess_word_buffer);
 						break; 
 					}
 					printf("YOU WIN!\n");
