@@ -1,4 +1,11 @@
 # DEVLOG (Latest - Oldest)
+## Devlog for January 11th 2022
+This is the second formally written devlog for the Hangman project.
+
+### Gabriel
+I Finished up the base hangman game, adding a lose condition and word + character guess saving and display. I also fixed the character and word guess check mechanics as they were buggy.
+
+Started to port hangman to client. Server now sends word to client when game starts. Now just need to add turn based gameplay across clients. 
 
 ## Devlog for January 10th 2022
 This is the first formally written devlog for the Hangman project.
