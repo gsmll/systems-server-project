@@ -2,6 +2,7 @@
 #include "../inc/includes.h"
 //#include "../inc/termbox.h"
 #include <pthread.h>
+#include "../inc/hangman.h"
 static struct addrinfo * hints, * results;
 static int client_socket = 0;
 
@@ -36,18 +37,21 @@ static void sighandler( int signo ) {
       while( 1){
           //wait for next client
           
-            printf("Total Players: %d\n",playercount++);
+            printf("Start\n");
 
   
           
 
           client_socket = accept(listen_socket,(struct sockaddr *)&client_address, &sock_size);
+            printf("Player Joined\n");
 
           int client = fork();
           if(client == 0 ){
 
             
-            char buff[BUFSIZE];
+            char buff[BUFSIZE] ;
+            snprintf(buff, 6, "hello");
+            write(client_socket, buff, sizeof(buff));
 
           while(1){
 
