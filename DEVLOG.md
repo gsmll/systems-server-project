@@ -1,4 +1,26 @@
 # DEVLOG (Latest - Oldest)
+
+## Devlog for January 16th 2022
+This is the fifth formally written devlog for the Hangman project.
+
+### Gabriel
+Did A Looot : fixed up turn system between mutliple clients using shared memory. added choosable words. made guesses serverside such that both clients share gamestates. fixed bugs with word guesses (oh my god they sucked (mostly just fgets leaving stuff in buffer)). Universalized words using word length variables. 
+Used shared memory to sync clients.
+
+## Devlog for January 13th 2022
+This is the fourth formally written devlog for the Hangman project.
+
+### Gabriel
+Fixed up buffer issues in client, where fgets buffer would overflow. Now there is no such issue. 
+
+## Devlog for January 12th 2022
+This is the third formally written devlog for the Hangman project.
+
+### Gabriel
+Finished hangman game ,fixing up guessing mechanics and fixing up slight bugs and inefficiencies with guesses. Started to port game to clients and servers, now with server sending clients word to guess.
+
+
+
 ## Devlog for January 11th 2022
 This is the second formally written devlog for the Hangman project.
 
