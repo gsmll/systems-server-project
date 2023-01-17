@@ -5,6 +5,7 @@
 ## Notes
 - Project does not use files or file I/O, but does use shared memory for storage
 - Project also does not use termbox2 for graphics
+- Project has been tested and confirmed working on lab machines
 
 Instructions:
 
@@ -13,6 +14,11 @@ Instructions:
 3. Clients can now be executed and be given a IPV4 address and port (54321)
 4. Follow game rules as shown on the screen.
 
+Known Bugs:
+Acts wonky around the first and last letters of the guessing word. Sometimes it picks up a match
+and sometimes it doesn't. 
+
+When the game ends, the server does not immediately terminate itself. 
 
 
 
