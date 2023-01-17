@@ -1,6 +1,6 @@
 #include "../inc/includes.h"
 #include "../inc/termbox.h"
-
+#include <ctype.h>
 static struct addrinfo *results;
 static void sighandler( int signo ) {
   freeaddrinfo(results);
@@ -10,7 +10,7 @@ static char guess_character_buffer[16];
 static char *guess_word_buffer;
 static uintptr_t word_guesses = 0; 
 static uintptr_t character_guesses = 0; 
-static uintptr_t wrong_character_guesses = 0; 
+
 static uintptr_t wrong_word_guesses = 0; 
 
 int hangman(const char* srcw,int sd) 
@@ -23,6 +23,7 @@ int hangman(const char* srcw,int sd)
 	guess_word_buffer = calloc(src_word_len + 1, sizeof(char));
 	char *wrong_char_guesses = malloc(sizeof(char) * 7);
 	char **wrong_str_guesses = malloc(sizeof(char*) * 7);
+	int counter = 0;
 	for(int i = 0; i< 7; i++) wrong_str_guesses[i] = malloc(src_word_len+1);
 		
 	strncpy(answer, srcw, src_word_len + 1);
@@ -33,18 +34,41 @@ int hangman(const char* srcw,int sd)
 
 	while (strchr(answer, '.') != NULL) 
 	{
-		printf("Gameinfo\n\tchar_guesses: %zu\n\tword_guesses: %zu\n\t", 
-				character_guesses,
+		char buff [1024];
+		int wrong_character_guesses;
+		if((wrong_character_guesses=read(sd, buff, sizeof(buff))) <= 0){
+			sighandler(1);
+		}
+		buff[wrong_character_guesses]=0;
+		
+		strcpy(wrong_char_guesses,buff+4);
+		
+		printf("Gameinfo\n\tchar_guesses: %d\n\tword_guesses: %zu\n\t", 
+				wrong_character_guesses-4,
 				word_guesses);
 		printf("Wrong Guesses:\n\t");
-		if(wrong_character_guesses + wrong_word_guesses == 7) 
+		
+		for(uintptr_t i =0; i <wrong_character_guesses-4;i++)
+		{
+			char * pos = strchr(srcw, wrong_char_guesses[i]) ;
+			if(pos != NULL){ 
+				answer[pos-srcw] = wrong_char_guesses[i]; 
+				int j = 0;
+				while(srcw[pos-srcw + j] == wrong_char_guesses[i] )answer[pos-srcw+j++] = wrong_char_guesses[i]; 
+				wrong_char_guesses[i] = ' ';
+				 counter++;
+				}
+
+			printf(" %c",wrong_char_guesses[i]);
+		}
+		if(strchr(answer, '.') == NULL ) {
+			printf("\n\nYOU WIN!");
+			sighandler(1);
+		}
+		if(wrong_character_guesses + wrong_word_guesses - counter == 11) 
 		{
 			printf("YOU LOSE \n");
-			return 0;
-		}
-		for(uintptr_t i =0; i <wrong_character_guesses;i++)
-		{
-			printf(" %c",wrong_char_guesses[i]);
+			sighandler(1);
 		}
 		printf("\t");
 		for(uintptr_t i =0; i < wrong_word_guesses;i++)
@@ -63,56 +87,29 @@ int hangman(const char* srcw,int sd)
 				fgets(guess_character_buffer, 8, stdin);
 				fprintf(stderr, "[:: %c]", guess_type_buffer[0]);
 				character_guesses++;	
-        write(sd,guess_character_buffer,sizeof(guess_character_buffer));
-				char exist = 0;
-				for (uintptr_t i = 0; i < src_word_len; i++) 
-				{
-					
-					if (tolower(guess_character_buffer[0]) == tolower(srcw[i])) 
-					{
-						answer[i] = tolower(guess_character_buffer[0]);
-						exist = 1;
-						continue;
-					}
-					if(!(i == src_word_len - 1 && !exist)) continue;
-					wrong_char_guesses[wrong_character_guesses++] = toupper(guess_character_buffer[0]);
-					
-					
-					
-					
-					
-				}
+        		write(sd,guess_character_buffer,1);
+				
 				break;
 			case 'w':
 				printf("Enter a word guess: "); 
 				fgets(guess_word_buffer, src_word_len + 1, stdin);
-          write(sd,guess_word_buffer,src_word_len+1);
-
-				fprintf(stderr, "you guessed: %s\n", guess_word_buffer);
-				
-					word_guesses++;
-					if (strcasecmp(guess_word_buffer,srcw))
-					{
-						printf("You guess incorrectly!"); 
-						strcpy(wrong_str_guesses[wrong_word_guesses++],guess_word_buffer);
-						break; 
-					}
-					printf("YOU WIN!\n");
-					return 0;
-				
+       		    write(sd,guess_word_buffer,src_word_len+1);
+				break;
 			default: 
 				continue;
 		}
 	}
+	printf("\n\nYOU WIN!");
+
 	return 0;
 }
 int main(){
    signal(SIGINT, sighandler);
-  char ipv4[12];
+  char ipv4[16];
   char port[6];
 
   printf("Please enter server ipv4 address: \n");
-  fgets(ipv4, 13, stdin);
+  fgets(ipv4, 16, stdin);
   ipv4[strcspn(ipv4, "\n")] = 0;
   printf("Please enter server port: \n");
   fgets(port, 6, stdin);
@@ -142,6 +139,7 @@ int main(){
 
    if ( connect(sd, results->ai_addr, results->ai_addrlen) < 0) {
        printf("Failed to connect\n");
+	    printf("%s\n",strerror(errno));
        exit(1);
    }
 
@@ -151,10 +149,10 @@ int main(){
    
    if((n = read(sd, buff, sizeof(buff))) <= 0){
      printf("\n Connection Closed \n");
-     exit(1);
+	 sighandler(1);
    }
    buff[n]=0;
-   
+   printf("connected\n");
    hangman(buff,sd);
 
    printf("\n%d bytes read\n",n);
