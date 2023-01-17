@@ -45,7 +45,11 @@ static void sighandler( int signo ) {
       struct sockaddr_storage client_address;
       sock_size = sizeof(client_address);
       int playercount = 0;
-     
+      printf("What Word Do You Want Players to Guess????: ");
+      char wordtoguess[100];
+	    fgets(wordtoguess, 100, stdin);
+      int wordlen = strlen(wordtoguess);
+      printf("Waiting for Connections ::: \n");
       shmid = shmget(233811181, 10, IPC_CREAT | 0640); //create and access
       data=shmat(shmid, 0, 0);
       shmid2 = shmget(233811182, 1024, IPC_CREAT | 0640); //create and access
@@ -71,20 +75,26 @@ static void sighandler( int signo ) {
             int id = data[0];
             printf("id: %d\n",data[0]);
             char buff[BUFSIZE] ;
-            snprintf(buff, 6, "hello");
+            snprintf(buff, wordlen, wordtoguess);
             write(client_socket, buff, sizeof(buff));
 
 
           while(1){
             if (id > data[0]) id += (data[0] - id);
-            printf("%d %d\n",data[1],id);
             while(data[1] != id){
               sleep(1);
-              printf("sleeping\n");
+              printf("Player %d is waiting\n", id);
             }
-            printf("%d\n",data[2]);
-            usleep(500000);
+            usleep(250000);
             write(client_socket, data, data[2]);
+             usleep(250000);
+            if(data[3] > 0){
+            write(client_socket, data2, data[3] * wordlen + 1);
+            }
+            else{
+               write(client_socket, "\0",1);
+
+            }
           int len;
           if((len =read(client_socket,buff,sizeof(buff))) <= 0){
             data[0]--;
@@ -98,12 +108,15 @@ static void sighandler( int signo ) {
           }
           else{
             int i=0;
-            while(buff[i] != 0){
-              data2[(data[3]*6)+i] = buff[i++];
+         
+            while(buff[i] != 10 && buff[i] != 0 ){
+              data2[(data[3]*wordlen)+i] = buff[i];
+              i++;
+
             }
-            data2[(data[3]*6)+i] = 0;
-        
-            printf("word - %s\n",&data2[(data[3]++) * 6 + 1]);
+          
+         
+            data2[(data[3]++*wordlen)+i] = 0;
           }
           data[1] = (data[1] == data[0]) ? 1 : (data[1] + 1);
 

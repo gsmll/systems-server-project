@@ -11,7 +11,6 @@ static char *guess_word_buffer;
 static uintptr_t word_guesses = 0; 
 static uintptr_t character_guesses = 0; 
 
-static uintptr_t wrong_word_guesses = 0; 
 
 int hangman(const char* srcw,int sd) 
 {
@@ -35,13 +34,19 @@ int hangman(const char* srcw,int sd)
 	while (strchr(answer, '.') != NULL) 
 	{
 		char buff [1024];
+		char buff2 [1024];
 		int wrong_character_guesses;
 		if((wrong_character_guesses=read(sd, buff, sizeof(buff))) <= 0){
 			sighandler(1);
 		}
+		int wrong_word_guesses;
+		if((wrong_word_guesses=read(sd, buff2, sizeof(buff2))) <= 0){
+			sighandler(1);
+		}
 		buff[wrong_character_guesses]=0;
-		
-		strcpy(wrong_char_guesses,buff+4);
+		buff2[wrong_word_guesses]=0;
+	
+				strcpy(wrong_char_guesses,buff+4);
 		
 		printf("Gameinfo\n\tchar_guesses: %d\n\tword_guesses: %zu\n\t", 
 				wrong_character_guesses-4,
@@ -50,7 +55,7 @@ int hangman(const char* srcw,int sd)
 		
 		for(uintptr_t i =0; i <wrong_character_guesses-4;i++)
 		{
-			char * pos = strchr(srcw, wrong_char_guesses[i]) ;
+			char * pos = strchr(srcw, tolower(wrong_char_guesses[i])) ;
 			if(pos != NULL){ 
 				answer[pos-srcw] = wrong_char_guesses[i]; 
 				int j = 0;
@@ -65,18 +70,22 @@ int hangman(const char* srcw,int sd)
 			printf("\n\nYOU WIN!");
 			sighandler(1);
 		}
-		if(wrong_character_guesses + wrong_word_guesses - counter == 11) 
+		if(wrong_character_guesses- counter  + (wrong_word_guesses-1)/(src_word_len+1)== 11) 
 		{
 			printf("YOU LOSE \n");
 			sighandler(1);
 		}
 		printf("\t");
-		for(uintptr_t i =0; i < wrong_word_guesses;i++)
+	for(uintptr_t i =0; i < (wrong_word_guesses-1)/(src_word_len+1);i++)
 		{			
-			wrong_str_guesses[i][strcspn(wrong_str_guesses[i], "\n")] = 0;
-			printf(" %s",wrong_str_guesses[i]);
+			printf(" %s",&buff2[i*(src_word_len+1)]);
+			if(strcmp(&buff2[i*(src_word_len+1)],srcw) == 0){
+						printf("\n\nYOU WIN!");
+						sighandler(1);
+				}
 		}
 		printf("\t\nAnswer: %s\n", answer);
+	
 		printf("Character guess or word guess [c/w]: ");
 		fgets(guess_type_buffer, 8, stdin);
 
@@ -91,11 +100,19 @@ int hangman(const char* srcw,int sd)
 				
 				break;
 			case 'w':
-				printf("Enter a word guess: "); 
-				fgets(guess_word_buffer, src_word_len + 1, stdin);
-       		    write(sd,guess_word_buffer,src_word_len+1);
+				printf("Enter a word guess:"); 
+				fgets(guess_word_buffer, 100, stdin);
+				guess_word_buffer[src_word_len] = 0;
+				
+			    write(sd,guess_word_buffer,src_word_len+1);
+				if(strcmp(guess_word_buffer,srcw) == 0){
+						printf("\n\nYOU WIN!");
+						sighandler(1);
+				}
 				break;
 			default: 
+				printf("invalid letter\n");
+				write(sd,"\0",1);
 				continue;
 		}
 	}
