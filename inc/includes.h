@@ -9,6 +9,5 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "utiltype.h"
 #define BUFSIZE 100
 #define PORT "54321"

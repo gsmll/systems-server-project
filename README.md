@@ -1,7 +1,22 @@
 # LezHangum!
 
 # Gabriel Small, Jawad (Jamie) Sifat
-        
+
+## Notes
+- Project does not use files or file I/O, but does use shared memory for storage
+- Project also does not use termbox2 for graphics
+
+Instructions:
+
+1. Run `make` to generate both the client and server executable
+2. Start the server and input a word 
+3. Clients can now be executed and be given a IPV4 address and port (54321)
+4. Follow game rules as shown on the screen.
+
+
+
+
+# Proposal
 ## Project info
 
 A multiplayer, network-based hangman, with various players with realtime gameplay (TCP). This will consist of a server host and clients for each player (dynamic).

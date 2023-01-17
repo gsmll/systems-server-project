@@ -3,6 +3,10 @@
 ## Devlog for January 16th 2022
 This is the fifth formally written devlog for the Hangman project.
 
+### Jaime
+After doing some research on the termbox2 API, we decided that it would conflict too much with our server API design so we decided to scrap it. Fixed up Makefile and edited README.
+
+
 ### Gabriel
 Did A Looot : fixed up turn system between mutliple clients using shared memory. added choosable words. made guesses serverside such that both clients share gamestates. fixed bugs with word guesses (oh my god they sucked (mostly just fgets leaving stuff in buffer)). Universalized words using word length variables. 
 Used shared memory to sync clients.
